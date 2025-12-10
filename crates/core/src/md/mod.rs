@@ -10,7 +10,11 @@ mod layout;
 /// Stage 4: Lines -> PDF (backend)
 mod renderer;
 
-pub use layout::{LayoutEngine, PositionedLine};
+/// Font configuration and loading
+mod font;
+
+pub use font::{FontConfig, FontSource};
+pub use layout::{LayoutEngine, Page, PositionedLine};
 pub use parser::parse_markdown;
 pub use renderer::render_to_pdf;
 pub use styler::{Style, StyledBlock};
@@ -24,11 +28,21 @@ use std::io;
 /// 2. Apply styling and semantics to create styled blocks
 /// 3. Layout blocks into positioned lines and glyphs
 /// 4. Render positioned content to PDF format
+///
+/// Uses default built-in PDF fonts (Helvetica, Courier).
 pub fn markdown_to_pdf(markdown: &str) -> io::Result<Vec<u8>> {
+    markdown_to_pdf_with_fonts(markdown, &FontConfig::default())
+}
+
+/// Converts markdown text to PDF bytes with custom font configuration.
+///
+/// Allows specification of custom fonts for regular, bold, and monospace text.
+/// Falls back to built-in PDF fonts if custom fonts are not provided.
+pub fn markdown_to_pdf_with_fonts(markdown: &str, fonts: &FontConfig) -> io::Result<Vec<u8>> {
     let ir = parse_markdown(markdown);
     let styled = styler::apply_styles(ir);
     let positioned = layout::layout_blocks(&styled);
-    render_to_pdf(&positioned)
+    renderer::render_to_pdf_with_fonts(&positioned, fonts)
 }
 
 #[cfg(test)]

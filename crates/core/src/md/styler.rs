@@ -74,6 +74,7 @@ pub struct StyledBlock {
     pub content: String,
     pub style: Style,
     pub is_list_item: bool,
+    pub keep_with_next: bool,
 }
 
 /// Applies semantic styling to IR nodes, converting structure to styled blocks.
@@ -84,16 +85,23 @@ pub fn apply_styles(nodes: Vec<IRNode>) -> Vec<StyledBlock> {
         .into_iter()
         .map(|node| match node {
             IRNode::Heading { level, text } => {
-                StyledBlock { content: text, style: Style::heading(level), is_list_item: false }
+                StyledBlock { content: text, style: Style::heading(level), is_list_item: false, keep_with_next: true }
             }
-            IRNode::Paragraph { text } => StyledBlock { content: text, style: Style::paragraph(), is_list_item: false },
+            IRNode::Paragraph { text } => {
+                StyledBlock { content: text, style: Style::paragraph(), is_list_item: false, keep_with_next: false }
+            }
             IRNode::CodeBlock { code, .. } => {
-                StyledBlock { content: code, style: Style::code_block(), is_list_item: false }
+                StyledBlock { content: code, style: Style::code_block(), is_list_item: false, keep_with_next: false }
             }
-            IRNode::ListItem { text } => {
-                StyledBlock { content: format!("- {}", text), style: Style::list_item(), is_list_item: true }
+            IRNode::ListItem { text } => StyledBlock {
+                content: format!("- {}", text),
+                style: Style::list_item(),
+                is_list_item: true,
+                keep_with_next: false,
+            },
+            IRNode::Text { content } => {
+                StyledBlock { content, style: Style::paragraph(), is_list_item: false, keep_with_next: false }
             }
-            IRNode::Text { content } => StyledBlock { content, style: Style::paragraph(), is_list_item: false },
         })
         .collect()
 }
