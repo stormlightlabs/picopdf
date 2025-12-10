@@ -7,6 +7,7 @@ edition = "2024"
 pdf-writer = "0.14"
 pulldown-cmark = "0.13"
 ttf-parser = "0.25"
+lopdf = "0.38"
 
 [lints]
 workspace = true
