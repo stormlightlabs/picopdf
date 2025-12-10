@@ -69,30 +69,36 @@ impl LayoutEngine {
     }
 
     fn measure_block_height(&self, block: &StyledBlock) -> f32 {
-        let max_width = self.page_width - (2.0 * self.margin);
-        let char_width = self.char_width(&block.style);
-        let mut line_width = 0.0;
-        let mut line_count = 0;
+        let line_count = if block.is_code_block {
+            block.content.lines().count().max(1)
+        } else {
+            let max_width = self.page_width - (2.0 * self.margin);
+            let char_width = self.char_width(&block.style);
+            let mut line_width = 0.0;
+            let mut count = 0;
 
-        for word in block.content.split_whitespace() {
-            let word_width = word.len() as f32 * char_width;
-            let space_width = if line_width == 0.0 { 0.0 } else { char_width };
+            for word in block.content.split_whitespace() {
+                let word_width = word.len() as f32 * char_width;
+                let space_width = if line_width == 0.0 { 0.0 } else { char_width };
 
-            if line_width > 0.0 && line_width + space_width + word_width > max_width {
-                line_count += 1;
-                line_width = 0.0;
+                if line_width > 0.0 && line_width + space_width + word_width > max_width {
+                    count += 1;
+                    line_width = 0.0;
+                }
+
+                if line_width > 0.0 {
+                    line_width += space_width;
+                }
+
+                line_width += word_width;
             }
 
             if line_width > 0.0 {
-                line_width += space_width;
+                count += 1;
             }
 
-            line_width += word_width;
-        }
-
-        if line_width > 0.0 {
-            line_count += 1;
-        }
+            count
+        };
 
         block.style.margin_top + block.style.margin_bottom + (line_count as f32 * block.style.line_height)
     }
@@ -102,36 +108,42 @@ impl LayoutEngine {
         if self.should_page_break(block_height) && !is_page_start {
             self.new_page();
         }
-        let max_width = self.page_width - (2.0 * self.margin);
-        let char_width = self.char_width(&block.style);
 
         self.current_y += block.style.margin_top;
 
-        let words: Vec<&str> = block.content.split_whitespace().collect();
-        let mut current_line = String::new();
-        let mut line_width = 0.0;
+        if block.is_code_block {
+            for line in block.content.lines() {
+                self.add_line(line, &block.style);
+            }
+        } else {
+            let max_width = self.page_width - (2.0 * self.margin);
+            let char_width = self.char_width(&block.style);
+            let words: Vec<&str> = block.content.split_whitespace().collect();
+            let mut current_line = String::new();
+            let mut line_width = 0.0;
 
-        for word in words {
-            let word_width = word.len() as f32 * char_width;
-            let space_width = char_width;
+            for word in words {
+                let word_width = word.len() as f32 * char_width;
+                let space_width = char_width;
 
-            if line_width + word_width + space_width > max_width && !current_line.is_empty() {
-                self.add_line(&current_line, &block.style);
-                current_line.clear();
-                line_width = 0.0;
+                if line_width + word_width + space_width > max_width && !current_line.is_empty() {
+                    self.add_line(&current_line, &block.style);
+                    current_line.clear();
+                    line_width = 0.0;
+                }
+
+                if !current_line.is_empty() {
+                    current_line.push(' ');
+                    line_width += space_width;
+                }
+
+                current_line.push_str(word);
+                line_width += word_width;
             }
 
             if !current_line.is_empty() {
-                current_line.push(' ');
-                line_width += space_width;
+                self.add_line(&current_line, &block.style);
             }
-
-            current_line.push_str(word);
-            line_width += word_width;
-        }
-
-        if !current_line.is_empty() {
-            self.add_line(&current_line, &block.style);
         }
 
         self.current_y += block.style.margin_bottom;
@@ -218,6 +230,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: false,
+            is_code_block: false,
             keep_with_next: false,
         }];
 
@@ -241,6 +254,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: false,
+            is_code_block: false,
             keep_with_next: false,
         }];
 
@@ -262,6 +276,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: false,
+            is_code_block: false,
             keep_with_next: false,
         }];
 
@@ -286,6 +301,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: false,
+            is_code_block: false,
             keep_with_next: false,
         };
 
@@ -300,6 +316,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: false,
+            is_code_block: false,
             keep_with_next: true,
         };
 
@@ -314,6 +331,7 @@ mod tests {
                 is_monospace: false,
             },
             is_list_item: true,
+            is_code_block: false,
             keep_with_next: false,
         };
 

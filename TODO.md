@@ -2,12 +2,12 @@
 
 ## Tools
 
-- [ ] Merge: Combine multiple PDFs into one.
-- [ ] Split: Extract or split pages into separate PDFs.
-- [ ] Rotate: Rotate one or all pages.
-- [ ] Delete Pages: Remove pages.
-- [ ] Extract Pages: Pull out selected pages into a new file.
-- [ ] Organize: Rearrange, add, delete, and rotate pages in one UI.
+- [x] Merge: Combine multiple PDFs into one.
+- [x] Split: Extract or split pages into separate PDFs.
+- [x] Rotate: Rotate one or all pages.
+- [x] Delete Pages: Remove pages.
+- [x] Extract Pages: Pull out selected pages into a new file.
+- [x] Organize: Rearrange, add, delete, and rotate pages in one.
 - [ ] Compress: Reduce file size with basic/strong compression.
 
 ## From

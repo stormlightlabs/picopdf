@@ -82,7 +82,13 @@ pub fn parse_markdown(markdown: &str) -> Vec<IRNode> {
             },
             Event::Text(text) => current_text.push_str(&text),
             Event::Code(code) => current_text.push_str(&code),
-            Event::SoftBreak | Event::HardBreak => current_text.push(' '),
+            Event::SoftBreak | Event::HardBreak => {
+                if in_code_block {
+                    current_text.push('\n');
+                } else {
+                    current_text.push(' ');
+                }
+            }
             _ => {}
         }
     }
