@@ -68,9 +68,9 @@ Note-taking and summarization belong to the program or agent that consumes the b
 - The CLI currently requires `--input` and `--output` for `write` and most tools. Merge accepts multiple positional inputs, which is appropriate for one operation over several files.
 - Status messages currently use standard output, colors are unconditional, and several path conversions use `to_str().unwrap()`. These must be corrected before adding streamed reader output.
 - The core has 18 unit tests. There are no CLI integration tests or fixture PDFs for tools.
-- `cargo test --workspace` passes. `cargo clippy --workspace --all-targets -- -D warnings` currently fails on three `collapsible_match` findings in `crates/core/src/md/parser.rs`.
-- The repository is licensed under AGPL-3.0. External backend licenses and model licenses must be documented before release, even when the tools are invoked as separate processes.
-- The repository does not yet have the `py/picopdf-docling/` package, development flake, lock files, `.envrc`, or pinned Python environment. These are needed for the backend and reproducible development, but released Rust binaries must not depend on Nix.
+- Rust formatting, workspace tests, and clippy checks pass. The core has 18 unit tests; CLI integration tests have not been added yet.
+- The repository is licensed under MIT. External backend licenses and model licenses must be documented before release, even when the tools are invoked as separate processes.
+- The repository has a locked `py/picopdf-docling/` scaffold and a locked development flake. The default shell does not yet include the sidecar, and `.envrc` and model setup remain to be added. Released Rust binaries must not depend on Nix.
 
 ## Command-line interface
 

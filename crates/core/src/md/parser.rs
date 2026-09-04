@@ -57,26 +57,20 @@ pub fn parse_markdown(markdown: &str) -> Vec<IRNode> {
                         current_text.clear();
                     }
                 }
-                TagEnd::Paragraph => {
-                    if in_paragraph {
-                        nodes.push(IRNode::Paragraph { text: current_text.clone() });
-                        current_text.clear();
-                        in_paragraph = false;
-                    }
+                TagEnd::Paragraph if in_paragraph => {
+                    nodes.push(IRNode::Paragraph { text: current_text.clone() });
+                    current_text.clear();
+                    in_paragraph = false;
                 }
-                TagEnd::CodeBlock => {
-                    if in_code_block {
-                        nodes.push(IRNode::CodeBlock { lang: code_lang.take(), code: current_text.clone() });
-                        current_text.clear();
-                        in_code_block = false;
-                    }
+                TagEnd::CodeBlock if in_code_block => {
+                    nodes.push(IRNode::CodeBlock { lang: code_lang.take(), code: current_text.clone() });
+                    current_text.clear();
+                    in_code_block = false;
                 }
-                TagEnd::Item => {
-                    if in_list_item {
-                        nodes.push(IRNode::ListItem { text: current_text.clone() });
-                        current_text.clear();
-                        in_list_item = false;
-                    }
+                TagEnd::Item if in_list_item => {
+                    nodes.push(IRNode::ListItem { text: current_text.clone() });
+                    current_text.clear();
+                    in_list_item = false;
                 }
                 _ => {}
             },

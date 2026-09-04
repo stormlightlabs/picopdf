@@ -1,0 +1,1 @@
+"""Docling sidecar for picopdf."""

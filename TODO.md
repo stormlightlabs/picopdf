@@ -4,9 +4,9 @@ See [SPEC.md](SPEC.md) for behavior and acceptance criteria and [ROADMAP.md](ROA
 
 ## Foundation
 
-- [ ] Bring format, tests, and clippy checks to green.
-- [ ] Add `py/picopdf-docling/` as a locked uv package with the internal sidecar console script.
-- [ ] Add a locked Nix flake for the Rust package, Python package, checks, and development shells.
+- [x] Bring format, tests, and clippy checks to green.
+- [x] Add `py/picopdf-docling/` as a locked uv package with the internal sidecar console script.
+- [x] Add a locked Nix flake for the Rust package, Python package, checks, and development shells.
 - [ ] Expose the locked Python package in the default development shell without creating a second picopdf CLI.
 - [ ] Add an opt-in full development shell as OCR, rendering, compression, and office backends ship.
 - [ ] Add a minimal direnv `.envrc` that loads the flake without installing packages or downloading models.

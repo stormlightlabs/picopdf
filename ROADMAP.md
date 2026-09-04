@@ -6,12 +6,12 @@ This roadmap sequences the work in [SPEC.md](SPEC.md). Milestones are dependency
 
 **Exit criterion:** Existing commands retain their syntax, CLI behavior is covered by integration tests, and `direnv` loads a pinned Nix development shell where `picopdf-docling --protocol-version` works without model downloads.
 
-- [ ] Fix the current clippy failures in the Markdown parser. — blocked by: none
+- [x] Fix the current clippy failures in the Markdown parser. — blocked by: none
 - [ ] Add small generated PDF fixtures and CLI integration-test support. — blocked by: none
-- [ ] Scaffold `py/picopdf-docling/` as a uv package with a console script, protocol-version command, tests, and an exact supported Docling dependency. — blocked by: none
-- [ ] Commit the sidecar's `uv.lock` and prove its basic command works through `uv run --locked`. — blocked by: Python package scaffold
+- [x] Scaffold `py/picopdf-docling/` as a uv package with a console script, protocol-version command, tests, and an exact supported Docling dependency. — blocked by: none
+- [x] Commit the sidecar's `uv.lock` and prove its basic command works through `uv run --locked`. — blocked by: Python package scaffold
 - [ ] Spike the locked Python package in Nix with uv2nix and a nixpkgs Python overlay; record any required overrides. — blocked by: Python lock
-- [ ] Add a locked flake with a standalone picopdf package, lightweight Rust shell, and Rust checks. — blocked by: clippy fixes
+- [x] Add a locked flake with a standalone picopdf package, lightweight Rust shell, and Rust checks. — blocked by: clippy fixes
 - [ ] Add the default development shell with Rust and the locked Python package, plus a minimal `.envrc` using `use flake .#default`. — blocked by: Rust flake; Python/Nix spike
 - [ ] Ensure flake evaluation, shell entry, and protocol-version checks do not install packages, run inference, or download models. — blocked by: default development shell
 - [ ] Move status and diagnostics to stderr; reserve stdout for primary streamed data. — blocked by: CLI integration-test support

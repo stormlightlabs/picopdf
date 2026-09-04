@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "picopdf-docling"
+version = "0.1.0"
+description = "Internal Docling sidecar for picopdf"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = "MIT"
+dependencies = [
+  "docling==2.118.0",
+]
+
+[project.scripts]
+picopdf-docling = "picopdf_docling.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest==9.0.2",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
